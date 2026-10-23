@@ -169,3 +169,17 @@ export interface SantaAssignment {
   recipient_user_id: string;
   created_at: string;
 }
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: "item_changed" | "option_changed";
+  list_id: string | null;
+  item_id: string | null;
+  option_id: string | null;
+  title: string | null;
+  body: string;
+  read_at: string | null;
+  archived_at: string | null;
+  created_at: string;
+}

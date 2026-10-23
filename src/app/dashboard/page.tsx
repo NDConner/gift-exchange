@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Gift, Plus, Settings, Users } from "lucide-react";
+import { Bell, Gift, Plus, Settings, Users } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import { createList } from "@/app/lists/actions";
@@ -38,6 +38,13 @@ export default async function DashboardPage() {
     .single();
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "friend";
 
+  // Unread notifications for the bell badge (RLS scopes this to the user).
+  const { count: unreadCount } = await supabase
+    .from("notifications")
+    .select("id", { count: "exact", head: true })
+    .is("read_at", null)
+    .is("archived_at", null);
+
   const { data: ownLists } = await supabase
     .from("lists")
     .select("id,title,occasion,status,updated_at,list_items(count)")
@@ -71,6 +78,18 @@ export default async function DashboardPage() {
               className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
             >
               <Users className="h-4 w-4" /> Groups
+            </Link>
+            <Link
+              href="/notifications"
+              aria-label="Notifications"
+              className="relative inline-flex items-center justify-center rounded-full border border-border bg-card p-2.5 text-foreground transition-colors hover:bg-muted"
+            >
+              <Bell className="h-4 w-4" />
+              {unreadCount ? (
+                <span className="absolute -right-1 -top-1 grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-brand px-1 text-[11px] font-semibold text-brand-foreground">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              ) : null}
             </Link>
             <Link
               href="/settings"
