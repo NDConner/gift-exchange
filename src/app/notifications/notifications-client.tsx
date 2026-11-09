@@ -2,9 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Archive, Bell, Check, CheckCheck, ExternalLink } from "lucide-react";
+import { Archive, Bell, Check, CheckCheck, ExternalLink, Gift, PencilLine, Users } from "lucide-react";
 import type { Notification } from "@/lib/types";
 import { archiveNotification, markAllNotificationsRead, markNotificationRead } from "./actions";
+
+const ICONS: Record<string, typeof Bell> = {
+  list_shared: Users,
+  item_added: Gift,
+  item_changed: PencilLine,
+  option_changed: PencilLine,
+};
 
 function when(iso: string) {
   const d = new Date(iso);
@@ -69,7 +76,9 @@ export function NotificationsList({
         </div>
       )}
       <ul className="space-y-2">
-        {notes.map((n) => (
+        {notes.map((n) => {
+          const Icon = ICONS[n.type] ?? Bell;
+          return (
           <li
             key={n.id}
             className={`flex gap-3 rounded-2xl border p-4 ${
@@ -81,7 +90,7 @@ export function NotificationsList({
                 n.read_at ? "bg-muted text-muted-foreground" : "bg-brand/15 text-brand-strong"
               }`}
             >
-              <Bell className="h-4 w-4" />
+              <Icon className="h-4 w-4" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-sm text-foreground">{n.body}</p>
@@ -118,7 +127,8 @@ export function NotificationsList({
               </button>
             </div>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
