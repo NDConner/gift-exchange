@@ -4,6 +4,7 @@ import { ArrowLeft, KeyRound } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import { SettingsForm } from "./settings-form";
+import { ProfileForm } from "./profile-form";
 
 export const dynamic = "force-dynamic";
 
@@ -39,16 +40,13 @@ export default async function SettingsPage() {
 
         <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">You</h2>
-          <dl className="mt-3 space-y-2 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Name</dt>
-              <dd className="font-medium text-foreground">{profile?.display_name ?? "—"}</dd>
+          <div className="mt-3 space-y-3 text-sm">
+            <ProfileForm initialName={profile?.display_name ?? ""} />
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-muted-foreground">Email</span>
+              <span className="font-medium text-foreground">{profile?.email ?? user.email}</span>
             </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Email</dt>
-              <dd className="font-medium text-foreground">{profile?.email ?? user.email}</dd>
-            </div>
-          </dl>
+          </div>
           <Link
             href="/account/password"
             className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"

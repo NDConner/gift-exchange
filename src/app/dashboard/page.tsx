@@ -57,6 +57,12 @@ export default async function DashboardPage() {
     .neq("owner_id", user.id)
     .order("updated_at", { ascending: false });
 
+  // Groups the user belongs to (RLS returns only their groups).
+  const { data: myGroups } = await supabase
+    .from("groups")
+    .select("id,name,group_members(count)")
+    .order("name", { ascending: true });
+
   let ownerNames: Record<string, string> = {};
   if (sharedLists?.length) {
     const ids = [...new Set(sharedLists.map((l) => l.owner_id))];
@@ -198,6 +204,32 @@ export default async function DashboardPage() {
             </div>
           )}
         </section>
+
+        {/* Your groups */}
+        {myGroups && myGroups.length > 0 && (
+          <section className="mt-10">
+            <h2 className="flex items-center gap-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+              <Users className="h-4 w-4" /> Your groups
+            </h2>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {myGroups.map((g) => {
+                const members = (g.group_members as { count: number }[] | null)?.[0]?.count ?? 0;
+                return (
+                  <Link
+                    key={g.id}
+                    href={`/groups/${g.id}`}
+                    className="group rounded-2xl border border-border bg-card p-5 transition-colors hover:border-brand/40"
+                  >
+                    <h3 className="font-semibold text-card-foreground group-hover:text-brand-strong">{g.name}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {members} {members === 1 ? "member" : "members"}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Shared with you */}
         {sharedLists && sharedLists.length > 0 && (
