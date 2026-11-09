@@ -5,6 +5,8 @@ import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import { SettingsForm } from "./settings-form";
 import { ProfileForm } from "./profile-form";
+import { ContactsManager } from "./contacts-manager";
+import type { Contact } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +22,11 @@ export default async function SettingsPage() {
     .select("display_name,email,default_anonymous")
     .eq("id", user.id)
     .single();
+
+  const { data: contacts } = await supabase
+    .from("contacts")
+    .select("*")
+    .order("email", { ascending: true });
 
   return (
     <div className="flex flex-1 flex-col">
@@ -54,6 +61,8 @@ export default async function SettingsPage() {
             <KeyRound className="h-4 w-4" /> Change password
           </Link>
         </div>
+
+        <ContactsManager initial={(contacts ?? []) as Contact[]} />
 
         <SettingsForm initialAnonymous={profile?.default_anonymous ?? false} />
       </main>

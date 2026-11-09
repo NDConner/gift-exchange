@@ -170,6 +170,15 @@ export interface SantaAssignment {
   created_at: string;
 }
 
+export interface Contact {
+  id: string;
+  user_id: string;
+  email: string;
+  contact_user_id: string | null;
+  display_name: string | null;
+  created_at: string;
+}
+
 export type GiftStatus = "idea" | "purchased" | "wrapped" | "given";
 
 export const GIFT_STATUS_LABELS: Record<GiftStatus, string> = {

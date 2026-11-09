@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { rememberContact } from "@/lib/contacts";
 import { drawSanta } from "@/lib/santa";
 
 async function requireUser() {
@@ -56,7 +57,7 @@ export async function deleteGroup(groupId: string) {
 }
 
 export async function inviteToGroup(groupId: string, email: string) {
-  const { supabase } = await requireUser();
+  const { supabase, user } = await requireUser();
   const clean = email.trim().toLowerCase();
   if (!EMAIL_RE.test(clean)) return { error: "Enter a valid email address." };
 
@@ -77,6 +78,7 @@ export async function inviteToGroup(groupId: string, email: string) {
     if (error.code === "23505") return { error: "That person is already in the group." };
     return { error: error.message };
   }
+  await rememberContact(supabase, user.id, clean);
   revalidatePath(`/groups/${groupId}`);
   return { ok: true, member: data };
 }

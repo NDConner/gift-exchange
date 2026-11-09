@@ -17,12 +17,14 @@ export function SharePanel({
   initialShares,
   myGroups,
   shareOrigin,
+  contactEmails = [],
 }: {
   listId: string;
   initialToken: string | null;
   initialShares: ListShare[];
   myGroups: { id: string; name: string }[];
   shareOrigin: string;
+  contactEmails?: string[];
 }) {
   const [token, setToken] = useState(initialToken);
   const [shares, setShares] = useState<ListShare[]>(initialShares);
@@ -184,8 +186,14 @@ export function SharePanel({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="mom@example.com"
+            list="share-contacts"
             className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
           />
+          <datalist id="share-contacts">
+            {contactEmails.map((c) => (
+              <option key={c} value={c} />
+            ))}
+          </datalist>
           <button
             type="submit"
             disabled={pending}

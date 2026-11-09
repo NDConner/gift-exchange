@@ -48,6 +48,7 @@ export function GroupDetail({
   exchanges,
   joinToken: initialToken,
   origin,
+  contactEmails = [],
 }: {
   group: Group;
   isOwner: boolean;
@@ -56,6 +57,7 @@ export function GroupDetail({
   exchanges: SantaExchange[];
   joinToken: string | null;
   origin: string;
+  contactEmails?: string[];
 }) {
   const [name, setName] = useState(group.name);
   const [members, setMembers] = useState(initialMembers);
@@ -198,8 +200,14 @@ export function GroupDetail({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Invite by email"
+                    list="group-contacts"
                     className="h-11 w-full rounded-lg border border-border bg-background pl-9 pr-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                   />
+                  <datalist id="group-contacts">
+                    {contactEmails.map((c) => (
+                      <option key={c} value={c} />
+                    ))}
+                  </datalist>
                 </div>
                 <button
                   type="submit"

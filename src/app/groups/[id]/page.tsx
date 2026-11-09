@@ -67,11 +67,14 @@ export default async function GroupPage({ params }: { params: Promise<{ id: stri
     .eq("group_id", id)
     .order("created_at", { ascending: false });
 
+  const { data: contacts } = await supabase.from("contacts").select("email").order("email");
+
   return (
     <GroupDetail
       group={group}
       isOwner={group.owner_id === user.id}
       currentUserId={user.id}
+      contactEmails={(contacts ?? []).map((c) => c.email)}
       members={memberViews}
       exchanges={(exchanges ?? []) as SantaExchange[]}
       joinToken={group.join_token}

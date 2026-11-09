@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
+import { rememberContact } from "@/lib/contacts";
 import { sanitizeHtml } from "@/lib/sanitize";
 import type { ClaimStatus, ItemLink, ItemOptionInput, Priority, RichText } from "@/lib/types";
 
@@ -227,7 +228,7 @@ export async function revokeShareLink(listId: string) {
 }
 
 export async function shareWithEmail(listId: string, email: string) {
-  const { supabase } = await requireUser();
+  const { supabase, user } = await requireUser();
   const clean = email.trim().toLowerCase();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(clean)) {
     return { error: "Enter a valid email address." };
@@ -239,6 +240,7 @@ export async function shareWithEmail(listId: string, email: string) {
     .select("*")
     .single();
   if (error) return { error: error.message };
+  await rememberContact(supabase, user.id, clean);
   revalidatePath(`/lists/${listId}`);
   return { ok: true, share: data };
 }
