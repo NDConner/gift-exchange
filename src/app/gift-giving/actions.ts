@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import type { GiftStatus } from "@/lib/types";
+import type { GiftKind, GiftStatus, RecipientStatus } from "@/lib/types";
 
 async function requireUser() {
   const supabase = await createClient();
@@ -52,7 +52,14 @@ export async function addRecipient(input: {
 
 export async function updateRecipient(
   id: string,
-  patch: { name?: string; group_label?: string | null; linked_list_id?: string | null; budget?: number | null },
+  patch: {
+    name?: string;
+    group_label?: string | null;
+    linked_list_id?: string | null;
+    budget?: number | null;
+    status?: RecipientStatus;
+    clue_hunt?: boolean;
+  },
 ) {
   const { supabase } = await requireUser();
   const update: Record<string, unknown> = {};
@@ -60,6 +67,8 @@ export async function updateRecipient(
   if (patch.group_label !== undefined) update.group_label = patch.group_label?.trim() || null;
   if (patch.linked_list_id !== undefined) update.linked_list_id = patch.linked_list_id || null;
   if (patch.budget !== undefined) update.budget = patch.budget;
+  if (patch.status !== undefined) update.status = patch.status;
+  if (patch.clue_hunt !== undefined) update.clue_hunt = patch.clue_hunt;
   const { error } = await supabase.from("gift_recipients").update(update).eq("id", id);
   if (error) return { error: error.message };
   revalidatePath("/gift-giving");
@@ -89,13 +98,15 @@ export async function addManualGift(recipientId: string, name: string) {
 
 export async function updateGift(
   id: string,
-  patch: { name?: string | null; amount?: number | null; status?: GiftStatus },
+  patch: { name?: string | null; amount?: number | null; status?: GiftStatus; kind?: GiftKind; clue_hunt?: boolean },
 ) {
   const { supabase } = await requireUser();
   const update: Record<string, unknown> = {};
   if (patch.name !== undefined) update.name = patch.name?.trim() || null;
   if (patch.amount !== undefined) update.amount = patch.amount;
   if (patch.status !== undefined) update.status = patch.status;
+  if (patch.kind !== undefined) update.kind = patch.kind;
+  if (patch.clue_hunt !== undefined) update.clue_hunt = patch.clue_hunt;
   const { error } = await supabase.from("gift_purchases").update(update).eq("id", id);
   if (error) return { error: error.message };
   revalidatePath("/gift-giving");
@@ -115,7 +126,7 @@ export async function deleteGift(id: string) {
 export async function upsertClaimGift(
   recipientId: string,
   claimId: string,
-  patch: { amount?: number | null; status?: GiftStatus; name?: string | null },
+  patch: { amount?: number | null; status?: GiftStatus; name?: string | null; kind?: GiftKind; clue_hunt?: boolean },
 ) {
   const { supabase, user } = await requireUser();
   const { data: existing } = await supabase
@@ -129,6 +140,8 @@ export async function upsertClaimGift(
     if (patch.amount !== undefined) update.amount = patch.amount;
     if (patch.status !== undefined) update.status = patch.status;
     if (patch.name !== undefined) update.name = patch.name;
+    if (patch.kind !== undefined) update.kind = patch.kind;
+    if (patch.clue_hunt !== undefined) update.clue_hunt = patch.clue_hunt;
     const { error } = await supabase.from("gift_purchases").update(update).eq("id", existing.id);
     if (error) return { error: error.message };
     revalidatePath("/gift-giving");
@@ -143,6 +156,8 @@ export async function upsertClaimGift(
       name: patch.name ?? null,
       amount: patch.amount ?? null,
       status: patch.status ?? "purchased",
+      kind: patch.kind ?? "full",
+      clue_hunt: patch.clue_hunt ?? false,
     })
     .select("id")
     .single();

@@ -179,6 +179,9 @@ export const GIFT_STATUS_LABELS: Record<GiftStatus, string> = {
   given: "Given",
 };
 
+export type RecipientStatus = "in_progress" | "complete";
+export type GiftKind = "full" | "stocking";
+
 export interface GiftRecipient {
   id: string;
   user_id: string;
@@ -187,6 +190,8 @@ export interface GiftRecipient {
   group_label: string | null;
   linked_list_id: string | null;
   budget: number | null;
+  status: RecipientStatus;
+  clue_hunt: boolean;
   position: number;
   created_at: string;
 }
@@ -199,6 +204,8 @@ export interface GiftPurchase {
   name: string | null;
   amount: number | null;
   status: GiftStatus;
+  kind: GiftKind;
+  clue_hunt: boolean;
   position: number;
   created_at: string;
 }
