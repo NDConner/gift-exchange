@@ -170,10 +170,43 @@ export interface SantaAssignment {
   created_at: string;
 }
 
+export type GiftStatus = "idea" | "purchased" | "wrapped" | "given";
+
+export const GIFT_STATUS_LABELS: Record<GiftStatus, string> = {
+  idea: "Idea",
+  purchased: "Purchased",
+  wrapped: "Wrapped",
+  given: "Given",
+};
+
+export interface GiftRecipient {
+  id: string;
+  user_id: string;
+  year: number;
+  name: string;
+  group_label: string | null;
+  linked_list_id: string | null;
+  budget: number | null;
+  position: number;
+  created_at: string;
+}
+
+export interface GiftPurchase {
+  id: string;
+  user_id: string;
+  recipient_id: string;
+  claim_id: string | null;
+  name: string | null;
+  amount: number | null;
+  status: GiftStatus;
+  position: number;
+  created_at: string;
+}
+
 export interface Notification {
   id: string;
   user_id: string;
-  type: "item_changed" | "option_changed";
+  type: "item_changed" | "option_changed" | "list_shared" | "item_added";
   list_id: string | null;
   item_id: string | null;
   option_id: string | null;

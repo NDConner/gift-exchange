@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Bell, Gift, Plus, Settings, Users } from "lucide-react";
+import { Bell, Gift, Plus, Settings, Users, Wallet } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import { createList } from "@/app/lists/actions";
@@ -78,6 +78,12 @@ export default async function DashboardPage() {
               className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
             >
               <Users className="h-4 w-4" /> Groups
+            </Link>
+            <Link
+              href="/gift-giving"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              <Wallet className="h-4 w-4" /> Giving
             </Link>
             <Link
               href="/notifications"
