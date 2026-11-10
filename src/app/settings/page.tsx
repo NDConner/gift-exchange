@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, KeyRound } from "lucide-react";
+import { ArrowLeft, KeyRound, LogOut } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import { SettingsForm } from "./settings-form";
@@ -54,12 +54,22 @@ export default async function SettingsPage() {
               <span className="font-medium text-foreground">{profile?.email ?? user.email}</span>
             </div>
           </div>
-          <Link
-            href="/account/password"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <KeyRound className="h-4 w-4" /> Change password
-          </Link>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <Link
+              href="/account/password"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+            >
+              <KeyRound className="h-4 w-4" /> Change password
+            </Link>
+            <form action="/auth/signout" method="post">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-brand-strong"
+              >
+                <LogOut className="h-4 w-4" /> Sign out
+              </button>
+            </form>
+          </div>
         </div>
 
         <ContactsManager initial={(contacts ?? []) as Contact[]} />

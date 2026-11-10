@@ -76,25 +76,27 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-1 flex-col">
       <header className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
           <Wordmark href="/dashboard" />
-          <div className="flex items-center gap-2">
+          <nav className="flex items-center gap-1.5 sm:gap-2">
             <Link
               href="/groups"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              aria-label="Groups"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card p-2 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-4 sm:py-2"
             >
-              <Users className="h-4 w-4" /> Groups
+              <Users className="h-4 w-4" /> <span className="hidden sm:inline">Groups</span>
             </Link>
             <Link
               href="/gift-giving"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              aria-label="Gift giving"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card p-2 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-4 sm:py-2"
             >
-              <Wallet className="h-4 w-4" /> Giving
+              <Wallet className="h-4 w-4" /> <span className="hidden sm:inline">Giving</span>
             </Link>
             <Link
               href="/notifications"
               aria-label="Notifications"
-              className="relative inline-flex items-center justify-center rounded-full border border-border bg-card p-2.5 text-foreground transition-colors hover:bg-muted"
+              className="relative inline-flex items-center justify-center rounded-full border border-border bg-card p-2 text-foreground transition-colors hover:bg-muted sm:p-2.5"
             >
               <Bell className="h-4 w-4" />
               {unreadCount ? (
@@ -106,23 +108,15 @@ export default async function DashboardPage() {
             <Link
               href="/settings"
               aria-label="Settings"
-              className="inline-flex items-center justify-center rounded-full border border-border bg-card p-2.5 text-foreground transition-colors hover:bg-muted"
+              className="inline-flex items-center justify-center rounded-full border border-border bg-card p-2 text-foreground transition-colors hover:bg-muted sm:p-2.5"
             >
               <Settings className="h-4 w-4" />
             </Link>
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
+          </nav>
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Hi {name} 👋
         </h1>
