@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Archive, Bell, Check, CheckCheck, ExternalLink, Gift, PencilLine, Users } from "lucide-react";
+import { Archive, Bell, Check, CheckCheck, ExternalLink, Gift, PencilLine, Ticket, Users } from "lucide-react";
 import type { Notification } from "@/lib/types";
 import { archiveNotification, markAllNotificationsRead, markNotificationRead } from "./actions";
 
@@ -11,6 +11,8 @@ const ICONS: Record<string, typeof Bell> = {
   item_added: Gift,
   item_changed: PencilLine,
   option_changed: PencilLine,
+  coupon_match: Ticket,
+  coupon_expiring: Ticket,
 };
 
 function when(iso: string) {

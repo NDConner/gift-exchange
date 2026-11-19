@@ -1,7 +1,8 @@
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Claim, Comment, ListItem, ListShare, WishList } from "@/lib/types";
+import type { Claim, Comment, ListItem, ListShare, WalletItem, WishList } from "@/lib/types";
+import { matchWalletToItem } from "@/lib/coupon-match";
 import { OwnerEditor } from "./owner-editor";
 import { GiverView } from "./giver-view";
 
@@ -98,6 +99,19 @@ export default async function ListPage({
     .eq("id", user.id)
     .single();
 
+  // Buyer Wallet match: flag items the viewer holds a code for. RLS scopes
+  // wallet_items to the viewer, so the owner never learns what codes they hold.
+  const { data: walletRows } = await supabase.from("wallet_items").select("*").eq("status", "active");
+  const wallet = (walletRows ?? []) as WalletItem[];
+  const today = new Date().toISOString().slice(0, 10);
+  const couponsByItem: Record<string, WalletItem[]> = {};
+  if (wallet.length) {
+    for (const it of giverItems) {
+      const m = matchWalletToItem(it, wallet, today);
+      if (m.length) couponsByItem[it.id] = m;
+    }
+  }
+
   return (
     <GiverView
       list={list as WishList}
@@ -109,6 +123,7 @@ export default async function ListPage({
       currentUserId={user.id}
       defaultAnonymous={me?.default_anonymous ?? false}
       ownerName={names[list.owner_id] ?? "Someone"}
+      couponsByItem={couponsByItem}
     />
   );
 }

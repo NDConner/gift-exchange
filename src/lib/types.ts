@@ -8,6 +8,52 @@ export const PRIORITY_LABELS: Record<Priority, string> = {
 
 export const OCCASIONS = ["Christmas", "Birthday", "Just because", "Wedding", "Baby", "Graduation"];
 
+// ---------------------------------------------------------------------------
+// Buyer Wallet (Coupon Overview)
+// ---------------------------------------------------------------------------
+export type WalletKind = "coupon" | "gift_card" | "store_credit" | "loyalty" | "other";
+
+export const WALLET_KIND_LABELS: Record<WalletKind, string> = {
+  coupon: "Coupon",
+  gift_card: "Gift card",
+  store_credit: "Store credit",
+  loyalty: "Loyalty",
+  other: "Other",
+};
+
+export interface WalletItem {
+  id: string;
+  user_id: string;
+  kind: WalletKind;
+  brand: string | null;
+  brand_domain: string | null;
+  brand_logo_url: string | null;
+  code: string | null;
+  pin: string | null;
+  barcode_value: string | null;
+  barcode_format: string | null;
+  value_initial: number | null;
+  value_remaining: number | null;
+  currency: string | null;
+  discount_type: "amount" | "percent" | null;
+  category: string | null;
+  notes: string | null;
+  image_path: string | null;
+  valid_from: string | null;
+  expires_at: string | null;
+  status: "active" | "used" | "expired" | "archived";
+  created_at: string;
+}
+
+export interface WalletRedemption {
+  id: string;
+  user_id: string;
+  wallet_item_id: string;
+  amount: number | null;
+  note: string | null;
+  redeemed_at: string;
+}
+
 export type ListStatus = "draft" | "shared";
 export type ClaimStatus = "planning" | "purchased";
 
@@ -222,7 +268,7 @@ export interface GiftPurchase {
 export interface Notification {
   id: string;
   user_id: string;
-  type: "item_changed" | "option_changed" | "list_shared" | "item_added";
+  type: "item_changed" | "option_changed" | "list_shared" | "item_added" | "coupon_match" | "coupon_expiring";
   list_id: string | null;
   item_id: string | null;
   option_id: string | null;

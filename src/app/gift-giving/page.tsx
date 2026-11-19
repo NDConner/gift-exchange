@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Ticket } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import type { GiftPurchase, GiftRecipient } from "@/lib/types";
@@ -100,15 +100,25 @@ export default async function GiftGivingPage({
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
           <Wordmark href="/dashboard" />
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <ArrowLeft className="h-4 w-4" /> Dashboard
-          </Link>
+          <nav className="flex items-center gap-1.5 sm:gap-2">
+            <Link
+              href="/gift-giving/coupons"
+              aria-label="Coupon overview"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card p-2 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-4 sm:py-2"
+            >
+              <Ticket className="h-4 w-4" /> <span className="hidden sm:inline">Coupons</span>
+            </Link>
+            <Link
+              href="/dashboard"
+              aria-label="Dashboard"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card p-2 text-sm font-medium transition-colors hover:bg-muted sm:px-4 sm:py-2"
+            >
+              <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">Dashboard</span>
+            </Link>
+          </nav>
         </div>
       </header>
 

@@ -9,6 +9,7 @@ import { SubItemDisplay } from "@/components/sub-item-display";
 import { ItemLinks } from "@/components/item-links";
 import { ItemPhoto } from "@/components/item-photo";
 import { ItemIcon } from "@/components/item-icon";
+import { CouponMatch } from "@/components/coupon-match";
 import { createClient } from "@/lib/supabase/client";
 import {
   PRIORITY_LABELS,
@@ -17,6 +18,7 @@ import {
   type Comment,
   type ListItem,
   type Priority,
+  type WalletItem,
   type WishList,
 } from "@/lib/types";
 import { addComment, claimTarget, deleteComment, releaseClaim, updateClaim } from "@/app/lists/actions";
@@ -47,6 +49,7 @@ export function GiverView({
   currentUserId,
   defaultAnonymous,
   ownerName,
+  couponsByItem,
 }: {
   list: WishList;
   items: ListItem[];
@@ -57,6 +60,7 @@ export function GiverView({
   currentUserId: string;
   defaultAnonymous: boolean;
   ownerName: string;
+  couponsByItem: Record<string, WalletItem[]>;
 }) {
   const [claims, setClaims] = useState<Claim[]>(initialClaims);
   const [comments, setComments] = useState<Comment[]>(initialComments);
@@ -119,6 +123,7 @@ export function GiverView({
       listId={list.id}
       claims={claimsByItem.get(item.id) ?? []}
       comments={comments.filter((c) => c.item_id === item.id)}
+      matches={couponsByItem[item.id] ?? []}
       currentUserId={currentUserId}
       defaultAnonymous={defaultAnonymous}
       who={who}
@@ -365,6 +370,7 @@ function ItemBlock({
   listId,
   claims,
   comments,
+  matches,
   currentUserId,
   defaultAnonymous,
   who,
@@ -378,6 +384,7 @@ function ItemBlock({
   listId: string;
   claims: Claim[];
   comments: Comment[];
+  matches: WalletItem[];
   currentUserId: string;
   defaultAnonymous: boolean;
   who: (id: string) => Person;
@@ -424,6 +431,7 @@ function ItemBlock({
 
       {item.image_url && <ItemPhoto url={item.image_url} alt={item.title} maxH="max-h-64" className="mt-4" />}
       <ItemLinks item={item} className="mt-4" />
+      {!removed && <CouponMatch matches={matches} />}
 
       {hasOptions ? (
         <div className="mt-4 space-y-4">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Bell, Gift, Plus, Settings, Users, Wallet } from "lucide-react";
+import { Bell, Gift, Plus, Settings, Ticket, Users, Wallet } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { createClient } from "@/lib/supabase/server";
 import { createList } from "@/app/lists/actions";
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-border">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
           <Wordmark href="/dashboard" />
           <nav className="flex items-center gap-1.5 sm:gap-2">
@@ -92,6 +92,13 @@ export default async function DashboardPage() {
               className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card p-2 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-4 sm:py-2"
             >
               <Wallet className="h-4 w-4" /> <span className="hidden sm:inline">Giving</span>
+            </Link>
+            <Link
+              href="/gift-giving/coupons"
+              aria-label="Coupons"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card p-2 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-4 sm:py-2"
+            >
+              <Ticket className="h-4 w-4" /> <span className="hidden sm:inline">Coupons</span>
             </Link>
             <Link
               href="/notifications"
